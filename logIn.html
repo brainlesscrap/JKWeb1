@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/html.html to edit this template
+-->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobKonek PH - Login</title>
+    <style>
+        :root { --primary: linear-gradient(135deg,#003366,#005599); --success: linear-gradient(135deg,#28a745,#20c997); }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .login-container { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); padding: 60px 40px; border-radius: 24px; box-shadow: 0 25px 80px rgba(0,0,0,0.3); max-width: 450px; width: 90%; text-align: center; border: 1px solid rgba(255,255,255,0.2); }
+        .logo { height: 80px; width: auto; margin-bottom: 20px; filter: drop-shadow(0 8px 25px rgba(0,51,102,0.3)); }
+        h1 { color: #1a1a2e; margin-bottom: 10px; font-size: 2.2em; font-weight: 800; }
+        .subtitle { color: #5f6c7b; margin-bottom: 40px; font-size: 1.1em; }
+        .login-form { display: flex; flex-direction: column; gap: 20px; }
+        .role-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .role-tab { flex: 1; padding: 12px; background: rgba(255,255,255,0.7); border: 2px solid transparent; border-radius: 16px; cursor: pointer; transition: all 0.3s; font-weight: 600; }
+        .role-tab.active { background: white; border-color: #28a745; box-shadow: 0 5px 20px rgba(40,167,69,0.2); }
+        input { padding: 18px 24px; font-size: 16px; border: 2px solid #e9ecef; border-radius: 16px; transition: all 0.3s; background: rgba(255,255,255,0.9); }
+        input:focus { outline: none; border-color: #28a745; box-shadow: 0 0 0 4px rgba(40,167,69,0.1); transform: translateY(-2px); }
+        .login-btn { padding: 18px; background: var(--success); color: white; border: none; border-radius: 16px; font-size: 18px; font-weight: 700; cursor: pointer; transition: all 0.3s; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 10px 30px rgba(40,167,69,0.4); }
+        .login-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(40,167,69,0.5); }
+        .error { background: #ff6b6b; color: white; padding: 12px; border-radius: 12px; margin-top: 15px; animation: shake 0.5s; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        @media (max-width: 768px) { .login-container { padding: 40px 20px; margin: 20px; } }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <img src="WebLogo.jpg" alt="JobKonek Logo" class="logo">
+        <h1>JobKonek PH</h1>
+        <p class="subtitle">Connecting Filipinos to Quality Opportunities</p>
+
+        <div class="role-tabs">
+            <div class="role-tab active" onclick="setRole('user')">👤 Job Seeker</div>
+            <div class="role-tab" onclick="setRole('admin')">🔧 Admin</div>
+        </div>
+
+        <form class="login-form" onsubmit="login(event)">
+            <input type="email" id="username" placeholder="user@jobkonek.ph" autocomplete="off" required>
+            <input type="password" id="password" placeholder="user123" autocomplete="off" required>
+            <button type="submit" class="login-btn">🚀 Enter JobKonek</button>
+        </form>
+
+        <div id="errorMsg" class="error" style="display: none;"></div>
+
+        <div style="margin-top: 25px; color: #666; font-size: 14px; background: rgba(255,255,255,0.3); padding: 15px; border-radius: 12px;">
+            <strong>💡 Quick Login:</strong><br>
+            👤 <code>user@jobkonek.ph</code> / <code>user123</code><br>
+            🔧 <code>admin@jobkonek.ph</code> / <code>admin123</code>
+        </div>
+    </div>
+
+    <script>
+        const USERS = {
+            'user@jobkonek.ph': { password: 'user123', role: 'user' },
+            'admin@jobkonek.ph': { password: 'admin123', role: 'admin' }
+        };
+
+        function setRole(role) {
+            document.querySelectorAll('.role-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            document.querySelector('.login-btn').dataset.role = role;
+        }
+
+        function showError(msg) {
+            const errorDiv = document.getElementById('errorMsg');
+            errorDiv.textContent = msg;
+            errorDiv.style.display = 'block';
+            setTimeout(() => errorDiv.style.display = 'none', 5000);
+        }
+
+        function login(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value.trim().toLowerCase();
+            const password = document.getElementById('password').value.trim();
+            const role = document.querySelector('.login-btn').dataset.role || 'user';
+
+            const user = USERS[username];
+            if (user && user.password === password && user.role === role) {
+                // SUCCESS - Redirect to your dashboard
+                if (role === 'admin') {
+                    window.location.href = 'dashboard.html';  // Change this to your admin page
+                } else {
+                    window.location.href = 'dashboard.html';  // Your main job listing page
+                }
+            } else {
+                showError('❌ Access Denied! Check email, password, and role tab.');
+            }
+        }
+
+        document.querySelector('.login-btn').dataset.role = 'user';
+    </script>
+</body>
+</html>
+
